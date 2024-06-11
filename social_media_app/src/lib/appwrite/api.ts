@@ -142,7 +142,6 @@ export async function saveUserToDB(user: {
     }
   }
   
-  // ============================== UPLOAD FILE
   export async function uploadFile(file: File) {
     try {
       const uploadedFile = await storage.createFile(
@@ -157,7 +156,6 @@ export async function saveUserToDB(user: {
     }
   }
   
-  // ============================== GET FILE URL
   export function getFilePreview(fileId: string) {
     try {
       const fileUrl = storage.getFilePreview(
