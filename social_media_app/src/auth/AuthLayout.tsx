@@ -9,7 +9,7 @@ function AuthLayout() {
             <Navigate to='/' />
         ): (
             <>
-            <div className="flex min-h-screen">
+            <div className="flex min-h-screen items-center px-5">
                 <section className="flex flex-1 justify-center items-center flex-col ">
                     <Outlet />
                 </section>
