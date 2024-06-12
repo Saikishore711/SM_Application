@@ -69,7 +69,6 @@ export async function saveUserToDB(user: {
     }
   }
   
-  // ============================== GET USER
   export async function getCurrentUser() {
     try {
       const currentAccount = await getAccount();
@@ -342,7 +341,6 @@ export async function saveUserToDB(user: {
     }
   }
   
-  // ============================== LIKE / UNLIKE POST
   export async function likePost(postId: string, likesArray: string[]) {
     try {
       const updatedPost = await databases.updateDocument(
@@ -362,7 +360,6 @@ export async function saveUserToDB(user: {
     }
   }
   
-  // ============================== SAVE POST
   export async function savePost(userId: string, postId: string) {
     try {
       const updatedPost = await databases.createDocument(
@@ -382,7 +379,6 @@ export async function saveUserToDB(user: {
       console.log(error);
     }
   }
-  // ============================== DELETE SAVED POST
   export async function deleteSavedPost(savedRecordId: string) {
     try {
       const statusCode = await databases.deleteDocument(
@@ -399,7 +395,6 @@ export async function saveUserToDB(user: {
     }
   }
   
-  // ============================== GET USER'S POST
   export async function getUserPosts(userId?: string) {
     if (!userId) return;
   
@@ -440,7 +435,6 @@ export async function saveUserToDB(user: {
     }
   }
   
-  // ============================== GET USER BY ID
   export async function getUserById(userId: string) {
     try {
       const user = await databases.getDocument(
@@ -457,7 +451,6 @@ export async function saveUserToDB(user: {
     }
   }
   
-  // ============================== UPDATE USER
   export async function updateUser(user: IUpdateUser) {
     const hasFileToUpdate = user.file.length > 0;
     try {
