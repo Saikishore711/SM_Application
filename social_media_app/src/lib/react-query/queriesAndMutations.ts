@@ -3,8 +3,9 @@ import {
     useMutation,
     useQuery,
     useQueryClient,
+    useInfiniteQuery
   } from "@tanstack/react-query";
-import { createPost, createUserAccount, deleteSavedPost, getCurrentUser, getRecentPosts, getUserById, getUsers, likePost, savePost, signInAccount, signOutAccount, updatePost, updateUser } from "../appwrite/api";
+import { createPost, createUserAccount, deletePost, deleteSavedPost, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getUserById, getUserPosts, getUsers, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateUser } from "../appwrite/api";
 import { QUERY_KEYS } from "./QueryKeys";
 
   export const useCreateUserAccount = () => {
@@ -156,6 +157,63 @@ import { QUERY_KEYS } from "./QueryKeys";
           });
           queryClient.invalidateQueries({
             queryKey: [QUERY_KEYS.GET_USER_BY_ID, data?.$id],
+          });
+        },
+      });
+    };
+
+    export const useGetPostById = (postId?: string) => {
+      return useQuery({
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
+        queryFn: () => getPostById(postId),
+        enabled: !!postId,
+      });
+    };
+    
+    export const useGetUserPosts = (userId?: string) => {
+      return useQuery({
+        queryKey: [QUERY_KEYS.GET_USER_POSTS, userId],
+        queryFn: () => getUserPosts(userId),
+        enabled: !!userId,
+      });
+    };  
+
+    export const useGetPosts = () => {
+      return useInfiniteQuery({
+        queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        queryFn: getInfinitePosts as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getNextPageParam: (lastPage: any) => {
+          // If there's no data, there are no more pages.
+          if (lastPage && lastPage.documents.length === 0) {
+            return null;
+          }
+    
+          // Use the $id of the last document as the cursor.
+          const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
+          return lastId;
+        },
+        initialPageParam: null, // Provide a sensible default initial page parameter
+      });
+    };
+    
+    export const useSearchPosts = (searchTerm: string) => {
+      return useQuery({
+        queryKey: [QUERY_KEYS.SEARCH_POSTS, searchTerm],
+        queryFn: () => searchPosts(searchTerm),
+        enabled: !!searchTerm,
+      });
+    };
+    
+    export const useDeletePost = () => {
+      const queryClient = useQueryClient();
+      return useMutation({
+        mutationFn: ({ postId, imageId }: { postId?: string; imageId: string }) =>
+          deletePost(postId, imageId),
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
           });
         },
       });
